@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 public class PanelForPaint extends JPanel {
+    public static ITransport plane;
     @Override
     public void paint(Graphics g) {
         super.paint(g);

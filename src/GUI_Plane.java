@@ -41,11 +41,22 @@ public class GUI_Plane
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random rnd = new Random();
-                plane = new MainLabaClass(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.RED, Color.BLUE);
+                plane = new plane(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.RED);
                 plane.SetPosition(rnd.nextInt(90) + 100, rnd.nextInt(90) + 100, paint_panel.getWidth(), paint_panel.getHeight());
                 Draw();
             }
         });
+
+        JButton button = new JButton("Upgrate");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Random rnd = new Random();
+                plane = new SportPlane(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.RED, Color.BLUE);
+                plane.SetPosition(rnd.nextInt(90) + 100, rnd.nextInt(90) + 100, paint_panel.getWidth(), paint_panel.getHeight());
+                Draw();
+            }
+        });
+        create_panel.add(button, BorderLayout.EAST);
         create_panel.add(create_button, BorderLayout.WEST);
         //
         JPanel control_panel = new JPanel();
