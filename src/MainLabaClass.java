@@ -27,13 +27,7 @@
      public Color getDopColor() {
         return DopColor;
     }
-     public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right
-    }
+
      // 
     public MainLabaClass(int maxSpeed, float weight, Color mainColor, Color dopColor)
     {
