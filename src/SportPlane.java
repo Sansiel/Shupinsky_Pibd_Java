@@ -22,14 +22,14 @@ import java.awt.Graphics;
         public void DrawPlane(Graphics g)
         {
             //
-            g.setColor(MainColor);
-            g.fillRect(_startPosX, _startPosY+40, planeWidth, planeHeight-80);
-            g.fillRect(_startPosX+20, _startPosY+20, planeWidth-120, planeHeight-40);
-            g.fillRect(_startPosX+80, _startPosY, planeWidth-120, planeHeight);
-
+//            g.setColor(MainColor);
+//            g.fillRect(_startPosX, _startPosY+40, planeWidth, planeHeight-80);
+//            g.fillRect(_startPosX+20, _startPosY+20, planeWidth-120, planeHeight-40);
+//            g.fillRect(_startPosX+80, _startPosY, planeWidth-120, planeHeight);
+            super.DrawPlane(g);
             g.setColor(DopColor);
-            g.fillRect(_startPosX+120, _startPosY+40, planeWidth-120, planeHeight-80);
-            g.fillRect(_startPosX+100, _startPosY, planeWidth-120, planeHeight-80);
-            g.fillRect(_startPosX+100, _startPosY+80, planeWidth-120, planeHeight-80);
+
+            g.fillOval(_startPosX+100, _startPosY-5, planeWidth-120, planeHeight-80);
+            g.fillOval(_startPosX+100, _startPosY+35, planeWidth-120, planeHeight-80);
         }
     }
