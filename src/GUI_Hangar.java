@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
  class GUI_Hangar {
-    private Hangar<ITransport> hangar;
+     private MultiLevelParking hangar;
+     private final int countLevel = 5;
 
      GUI_Hangar() {
         JFrame frame = new JFrame();
@@ -10,53 +11,67 @@ import java.awt.*;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
+         JPanel panelTakePlane = new JPanel();
+         panelTakePlane.setBounds(642, 257, 210, 220);
+         frame.getContentPane().add(panelTakePlane);
+         panelTakePlane.setLayout(null);
+
         PanelHangar panelHangar = new PanelHangar();
-        hangar = new Hangar<>(15, panelHangar.getWidth(), panelHangar.getHeight());
-        panelHangar.setHangar(hangar);
+         hangar = new MultiLevelParking(countLevel, panelHangar.getWidth(), panelHangar.getHeight());
+         panelHangar.setHangar(hangar.get(0));
         panelHangar.setBounds(10, 11, 622, 429);
         frame.getContentPane().add(panelHangar);
 
-        JPanel panelMain = new JPanel();
-        panelMain.setBounds(642, 257, 210, 220);
-        frame.getContentPane().add(panelMain);
-        panelMain.setLayout(null);
+         DefaultListModel listModel = new DefaultListModel();
+         for (int i = 1; i <= countLevel; i++) {
+             listModel.addElement("Уровень " + i);
+         }
+         JList list = new JList(listModel);
+         list.setBounds(642, 11, 132, 107);
+         frame.getContentPane().add(list);
+         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+         list.setSelectedIndex(0);
+         list.addListSelectionListener(e -> {
+             panelHangar.setHangar(hangar.get(list.getSelectedIndex()));
+             panelHangar.repaint();
+         });
 
         JLabel label = new JLabel("Забрать");
         label.setBounds(10, 11, 72, 14);
-        panelMain.add(label);
+         panelTakePlane.add(label);
 
         JLabel lblNewLabel = new JLabel("самолет");
         lblNewLabel.setBounds(10, 27, 93, 14);
-        panelMain.add(lblNewLabel);
+         panelTakePlane.add(lblNewLabel);
 
         JLabel label_1 = new JLabel("Место:");
         label_1.setBounds(10, 55, 46, 14);
-        panelMain.add(label_1);
+         panelTakePlane.add(label_1);
 
         JTextField textField = new JTextField();
         textField.setBounds(55, 52, 67, 20);
-        panelMain.add(textField);
+         panelTakePlane.add(textField);
         textField.setColumns(10);
 
         PanelPlane panelPlane = new PanelPlane();
         panelPlane.setBounds(10, 117, 140, 120);
-        panelMain.add(panelPlane);
+         panelTakePlane.add(panelPlane);
 
         JButton buttonTake = new JButton("Забрать");
         buttonTake.addActionListener(e -> {
             int planePosition = Integer.parseInt(textField.getText());
             ITransport pl;
-            if ((pl = hangar.del(planePosition)) != null) {
-                pl.SetPosition(0, 20, panelPlane.getWidth(), panelPlane.getHeight());
-                panelPlane.setTransport(pl);
-            } else {
-                panelPlane.setTransport(null);
-            }
+            if ((pl = hangar.get(list.getSelectedIndex()).del(planePosition)) != null) {
+                    pl.SetPosition(0, 20, panelPlane.getWidth(), panelPlane.getHeight());
+                    panelPlane.setTransport(pl);
+                } else {
+                    panelPlane.setTransport(null);
+                }
             panelPlane.repaint();
             panelHangar.repaint();
         });
         buttonTake.setBounds(10, 83, 112, 23);
-        panelMain.add(buttonTake);
+         panelTakePlane.add(buttonTake);
 
         JButton buttonParkPlane = new JButton();
         buttonParkPlane.addActionListener(e -> {
@@ -65,7 +80,7 @@ import java.awt.*;
                     (int) (Math.random() * 200) + 100,
                     (int) (Math.random() * 1000) + 1000,
                     firstColor);
-            hangar.add(pl);
+            hangar.get(list.getSelectedIndex()).add(pl);;
             panelHangar.repaint();
         });
         buttonParkPlane.setLayout(null);
@@ -75,7 +90,7 @@ import java.awt.*;
         label2.setBounds(5, 23, 100, 15);
         buttonParkPlane.add(label1);
         buttonParkPlane.add(label2);
-        buttonParkPlane.setBounds(642, 11, 132, 43);
+        buttonParkPlane.setBounds(642, 121, 132, 43);
         frame.getContentPane().add(buttonParkPlane);
 
         JButton buttonParkSportPlane = new JButton();
@@ -87,7 +102,7 @@ import java.awt.*;
                     (int) (Math.random() * 1000) + 1000,
                     firstColor,
                     secondColor);
-            hangar.add(pl);
+            hangar.get(list.getSelectedIndex()).add(pl);
             panelHangar.repaint();
         });
         buttonParkSportPlane.setLayout(null);
@@ -100,7 +115,7 @@ import java.awt.*;
         buttonParkSportPlane.add(label3);
         buttonParkSportPlane.add(label4);
         buttonParkSportPlane.add(label5);
-        buttonParkSportPlane.setBounds(642, 65, 132, 62);
+        buttonParkSportPlane.setBounds(642, 175, 132, 62);
         frame.getContentPane().add(buttonParkSportPlane);
         frame.setVisible(true);
     }
