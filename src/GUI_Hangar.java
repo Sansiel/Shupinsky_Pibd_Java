@@ -4,7 +4,20 @@ import java.awt.*;
  class GUI_Hangar {
      private MultiLevelParking hangar;
      private final int countLevel = 5;
+     JFrame frame;
+     private static JList list;
+     private GUI_Hangar_Config select;
 
+     public void getPlane() {
+         select = new GUI_Hangar_Config(frame);
+         if (select.res()) {
+             ITransport pl = select.plane;
+             int place = hangar.get(list.getSelectedIndex()).add(pl);
+             if (place < 0) {
+                 JOptionPane.showMessageDialog(null, "No free place");
+             }
+         }
+     }
      GUI_Hangar() {
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 815, 510);
@@ -16,6 +29,7 @@ import java.awt.*;
          frame.getContentPane().add(panelTakePlane);
          panelTakePlane.setLayout(null);
 
+
         PanelHangar panelHangar = new PanelHangar();
          hangar = new MultiLevelParking(countLevel, panelHangar.getWidth(), panelHangar.getHeight());
          panelHangar.setHangar(hangar.get(0));
@@ -26,7 +40,7 @@ import java.awt.*;
          for (int i = 1; i <= countLevel; i++) {
              listModel.addElement("Уровень " + i);
          }
-         JList list = new JList(listModel);
+         list = new JList(listModel);
          list.setBounds(642, 11, 132, 107);
          frame.getContentPane().add(list);
          list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -73,7 +87,7 @@ import java.awt.*;
         buttonTake.setBounds(10, 83, 112, 23);
          panelTakePlane.add(buttonTake);
 
-        JButton buttonParkPlane = new JButton();
+        /*JButton buttonParkPlane = new JButton();
         buttonParkPlane.addActionListener(e -> {
             Color firstColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
             ITransport pl = new plane(
@@ -92,10 +106,10 @@ import java.awt.*;
         buttonParkPlane.add(label2);
         buttonParkPlane.setBounds(642, 121, 132, 43);
         frame.getContentPane().add(buttonParkPlane);
-
+*/
         JButton buttonParkSportPlane = new JButton();
         buttonParkSportPlane.addActionListener(e -> {
-            Color firstColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
+            /*Color firstColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
             Color secondColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
             ITransport pl = new SportPlane(
                     (int) (Math.random() * 200) + 100,
@@ -103,6 +117,8 @@ import java.awt.*;
                     firstColor,
                     secondColor);
             hangar.get(list.getSelectedIndex()).add(pl);
+            */
+            getPlane();
             panelHangar.repaint();
         });
         buttonParkSportPlane.setLayout(null);
