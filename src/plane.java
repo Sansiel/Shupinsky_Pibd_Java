@@ -48,14 +48,10 @@ public class plane extends MainLabaClass{
     }
     public void DrawPlane(Graphics g)
     {
-        //
         g.setColor(MainColor);
         g.fillOval(_startPosX, _startPosY+15, planeWidth, planeHeight-80);
         g.fillOval(_startPosX+20, _startPosY + 5, planeWidth-120, planeHeight-60);
         g.fillOval(_startPosX+80, _startPosY - 15, planeWidth-120, planeHeight - 20);
-
-//        g.setColor(DopColor);
-//        g.fillRect(_startPosX+120, _startPosY+40, planeWidth-120, planeHeight-80);
     }
 
 }
