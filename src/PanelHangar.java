@@ -4,8 +4,8 @@ import java.awt.*;
 public class PanelHangar extends JPanel {
     private Hangar<ITransport> hangar;
 
-    public void setHangar(Hangar<ITransport> depo) {
-        this.hangar = depo;
+    public void setHangar(Hangar<ITransport> hangar) {
+        this.hangar = hangar;
     }
 
     @Override
