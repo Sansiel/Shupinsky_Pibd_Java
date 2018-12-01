@@ -18,7 +18,7 @@ public class GUI_Hangar_Config extends JDialog {
 
     private JPanel contentPane;
     public boolean rest;
-    public ITransport plane;
+    public ITransport pl;
 
     public boolean res() {
         setVisible(true);
@@ -98,7 +98,7 @@ public class GUI_Hangar_Config extends JDialog {
 
         contentPane.add(lblSportPlane);
 
-        JLabel lblPlane = new JLabel("Plane");
+        JLabel lblPlane = new JLabel("plane");
         lblPlane.setHorizontalAlignment(SwingConstants.CENTER);
         lblPlane.setBorder(solidBorder);
         lblPlane.setBounds(10, 78, 122, 56);
@@ -119,11 +119,11 @@ public class GUI_Hangar_Config extends JDialog {
                     for (DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
                         String str = (String)e.getTransferable().getTransferData(df);
                         if (e.getTransferable().getTransferData(df) == "plane") {
-                            plane = new plane(100, 100, Color.WHITE);
+                            pl = new  plane(100, 100, Color.WHITE);
                         } else if (e.getTransferable().getTransferData(df) == "SportPlane") {
-                            plane = new SportPlane(100, 100, Color.WHITE, Color.BLACK);
+                            pl = new SportPlane(100, 100, Color.WHITE, Color.BLACK);
                         }
-                        draw(panel, plane);
+                        draw(panel, pl);
                     }
                 } catch (Exception ex) {
                     System.out.println(ex);
@@ -153,11 +153,11 @@ public class GUI_Hangar_Config extends JDialog {
         lblMainColor.setBounds(142, 145, 159, 49);
         lblMainColor.setDropTarget(new DropTarget() {
             public void drop(DropTargetDropEvent e) {
-                if (plane != null) {
+                if (pl != null) {
                     try {
                         for (DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
-                            plane.setMainColor((selectColor(e.getTransferable().getTransferData(df).toString())));
-                            draw(panel, plane);
+                            pl.setMainColor((selectColor(e.getTransferable().getTransferData(df).toString())));
+                            draw(panel, pl);
                         }
                     } catch (Exception ex) {
                         System.out.println(ex + "FF");
@@ -187,11 +187,11 @@ public class GUI_Hangar_Config extends JDialog {
         lblAddColor.setBounds(142, 199, 159, 49);
         lblAddColor.setDropTarget(new DropTarget() {
             public void drop(DropTargetDropEvent e) {
-                if (plane != null) {
+                if (pl != null) {
                     try {
                         for (DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
-                            ((SportPlane) plane).setDopColor((selectColor(e.getTransferable().getTransferData(df).toString())));
-                            draw(panel, plane);
+                            ((SportPlane) pl).setDopColor((selectColor(e.getTransferable().getTransferData(df).toString())));
+                            draw(panel, pl);
                         }
                     } catch (Exception ex) {
                         System.out.println(ex);

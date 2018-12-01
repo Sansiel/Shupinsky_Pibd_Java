@@ -11,7 +11,7 @@ import java.awt.*;
      public void getPlane() {
          select = new GUI_Hangar_Config(frame);
          if (select.res()) {
-             ITransport pl = select.plane;
+             ITransport pl = select.pl;
              int place = hangar.get(list.getSelectedIndex()).add(pl);
              if (place < 0) {
                  JOptionPane.showMessageDialog(null, "No free place");
@@ -87,44 +87,15 @@ import java.awt.*;
         buttonTake.setBounds(10, 83, 112, 23);
          panelTakePlane.add(buttonTake);
 
-        /*JButton buttonParkPlane = new JButton();
-        buttonParkPlane.addActionListener(e -> {
-            Color firstColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
-            ITransport pl = new plane(
-                    (int) (Math.random() * 200) + 100,
-                    (int) (Math.random() * 1000) + 1000,
-                    firstColor);
-            hangar.get(list.getSelectedIndex()).add(pl);;
-            panelHangar.repaint();
-        });
-        buttonParkPlane.setLayout(null);
-        JLabel label1 = new JLabel("Припарковать");
-        label1.setBounds(5, 5, 100, 15);
-        JLabel label2 = new JLabel("Самолет");
-        label2.setBounds(5, 23, 100, 15);
-        buttonParkPlane.add(label1);
-        buttonParkPlane.add(label2);
-        buttonParkPlane.setBounds(642, 121, 132, 43);
-        frame.getContentPane().add(buttonParkPlane);
-*/
         JButton buttonParkSportPlane = new JButton();
         buttonParkSportPlane.addActionListener(e -> {
-            /*Color firstColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
-            Color secondColor = JColorChooser.showDialog(null, "Choose a Color", Color.WHITE);
-            ITransport pl = new SportPlane(
-                    (int) (Math.random() * 200) + 100,
-                    (int) (Math.random() * 1000) + 1000,
-                    firstColor,
-                    secondColor);
-            hangar.get(list.getSelectedIndex()).add(pl);
-            */
             getPlane();
             panelHangar.repaint();
         });
         buttonParkSportPlane.setLayout(null);
         JLabel label3 = new JLabel("Припарковать");
         label3.setBounds(5, 5, 100, 15);
-        JLabel label4 = new JLabel("Спортивный");
+        JLabel label4 = new JLabel("Какой-нибудь");
         label4.setBounds(5, 23, 100, 15);
         JLabel label5 = new JLabel("Самолет");
         label5.setBounds(5, 41, 100, 15);
