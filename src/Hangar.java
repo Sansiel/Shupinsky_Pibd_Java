@@ -47,8 +47,8 @@ public class Hangar<T extends ITransport> {
 
     public void Draw(Graphics g) {
         DrawMarking(g);
-        for (T loco : _places.values()) {
-            loco.DrawPlane(g);
+        for (T pl : _places.values()) {
+            pl.DrawPlane(g);
         }
     }
 
