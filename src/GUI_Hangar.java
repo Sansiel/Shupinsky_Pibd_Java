@@ -1,10 +1,13 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.*;
 
  class GUI_Hangar {
      private MultiLevelParking hangar;
      private final int countLevel = 5;
      JFrame frame;
+     private JMenuBar menuBar;
      private static JList list;
      private GUI_Hangar_Config select;
 
@@ -67,9 +70,59 @@ import java.awt.*;
          panelTakePlane.add(textField);
         textField.setColumns(10);
 
-        PanelPlane panelPlane = new PanelPlane();
-        panelPlane.setBounds(10, 117, 140, 120);
+         Font font = new Font("Verdana", Font.PLAIN, 11);
+         menuBar = new JMenuBar();
+         menuBar.setFont(font);
+
+         JMenu newMenu = new JMenu("Файл");
+         newMenu.setFont(font);
+         menuBar.add(newMenu);
+
+         JMenuItem saveFileItem = new JMenuItem("Сохранить");
+         saveFileItem.setFont(font);
+         newMenu.add(saveFileItem);
+
+         JMenuItem loadFileItem = new JMenuItem("Загрузить");
+         loadFileItem.setFont(font);
+         newMenu.add(loadFileItem);
+
+         PanelPlane panelPlane = new PanelPlane();
+         panelPlane.setBounds(10, 117, 140, 120);
          panelTakePlane.add(panelPlane);
+
+         saveFileItem.addActionListener(e -> {
+                 JFileChooser fileChoser = new JFileChooser();
+                 fileChoser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+                 int ret = fileChoser.showDialog(null, "Сохранить файл");
+                 if (ret == JFileChooser.APPROVE_OPTION) {
+                     File file = fileChoser.getSelectedFile();
+                     if (hangar.saveData(file.getAbsolutePath())) {
+                         JOptionPane.showMessageDialog(frame, "Сохранение прошло успешно");
+                     } else {
+                         JOptionPane.showMessageDialog(frame, "Произошла ошибка");
+                     }
+                 }
+         });
+
+         loadFileItem.addActionListener(e -> {
+                 JFileChooser fileChoser = new JFileChooser();
+                 fileChoser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+                 int ret = fileChoser.showDialog(null, "Открыть файл");
+                 if (ret == JFileChooser.APPROVE_OPTION) {
+                     File file = fileChoser.getSelectedFile();
+                     if (hangar.loadData(file.getAbsolutePath())) {
+                         JOptionPane.showMessageDialog(frame, "Загрузка прошло успешно");
+                         panelPlane.repaint();
+                         panelHangar.repaint();
+                     } else {
+                         JOptionPane.showMessageDialog(frame, "Произошла ошибка");
+                     }
+                 }
+         });
+
+         frame.setJMenuBar(menuBar);
+
+
 
         JButton buttonTake = new JButton("Забрать");
         buttonTake.addActionListener(e -> {

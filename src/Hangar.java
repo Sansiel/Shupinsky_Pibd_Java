@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.*;
 import java.util.*;
 
 public class Hangar<T extends ITransport> {
@@ -64,6 +65,19 @@ public class Hangar<T extends ITransport> {
                         i * _placeSizeWidth + 110, j * _placeSizeHeight);
             }
             g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth, 400);
+        }
+    }
+    public T getTrasport(int ind) {
+        if (_places.containsKey(ind)) {
+            return _places.get(ind);
+        }
+        return null;
+    }
+
+    public void setTrasport(int ind, T t) {
+        if (checkFreePlace(ind)) {
+            _places.put(ind, t);
+            _places.get(ind).SetPosition(10 + ind / 5 * _placeSizeWidth + 5, ind % 5 * _placeSizeHeight + 15, _pictureWidth, _pictureHeight);
         }
     }
 }

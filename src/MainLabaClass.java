@@ -38,7 +38,7 @@
         _pictureWidth = width;
         _pictureHeight = heigth;
     }
-     // 
+
 
 }
 
