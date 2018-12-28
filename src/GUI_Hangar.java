@@ -2,26 +2,35 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
  class GUI_Hangar {
      private MultiLevelParking hangar;
      private final int countLevel = 5;
+     private Logger logger;
+     FileHandler fh;
      JFrame frame;
      private JMenuBar menuBar;
      private static JList list;
      private GUI_Hangar_Config select;
 
-     public void getPlane() {
-         select = new GUI_Hangar_Config(frame);
-         if (select.res()) {
-             ITransport pl = select.pl;
-             int place = hangar.get(list.getSelectedIndex()).add(pl);
-             if (place < 0) {
-                 JOptionPane.showMessageDialog(null, "No free place");
-             }
-         }
-     }
      GUI_Hangar() {
+         logger = Logger.getLogger(GUI_Hangar.class.getName());
+         try {
+
+             // This block configure the logger with handler and formatter
+             fh = new FileHandler("D:/logs/log.txt");
+             logger.addHandler(fh);
+             SimpleFormatter formatter = new SimpleFormatter();
+             fh.setFormatter(formatter);
+         } catch (SecurityException e) {
+             e.printStackTrace();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 815, 510);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,10 +105,13 @@ import java.io.*;
                  int ret = fileChoser.showDialog(null, "Сохранить файл");
                  if (ret == JFileChooser.APPROVE_OPTION) {
                      File file = fileChoser.getSelectedFile();
-                     if (hangar.saveData(file.getAbsolutePath())) {
+                     try {
+                         hangar.saveData(file.getAbsolutePath());
                          JOptionPane.showMessageDialog(frame, "Сохранение прошло успешно");
-                     } else {
-                         JOptionPane.showMessageDialog(frame, "Произошла ошибка");
+                         logger.info("Сохранено в файл " + file.getName());
+
+                     } catch (Exception ex) {
+                         JOptionPane.showMessageDialog(frame, ex.getMessage(), "Неизвсетная ошибка при сохранении", JOptionPane.ERROR_MESSAGE);
                      }
                  }
          });
@@ -110,12 +122,15 @@ import java.io.*;
                  int ret = fileChoser.showDialog(null, "Открыть файл");
                  if (ret == JFileChooser.APPROVE_OPTION) {
                      File file = fileChoser.getSelectedFile();
-                     if (hangar.loadData(file.getAbsolutePath())) {
+                     try { hangar.loadData(file.getAbsolutePath());
                          JOptionPane.showMessageDialog(frame, "Загрузка прошло успешно");
+                         logger.info("Загружено из файла " + file.getName());
                          panelPlane.repaint();
                          panelHangar.repaint();
-                     } else {
-                         JOptionPane.showMessageDialog(frame, "Произошла ошибка");
+                     } catch (HangarOccupiedPlaceException ex) {
+                         JOptionPane.showMessageDialog(frame, ex.getMessage(), "Занятое место", JOptionPane.ERROR_MESSAGE);
+                     } catch (Exception ex) {
+                         JOptionPane.showMessageDialog(frame, ex.getMessage(), "Неизвсетная ошибка при загрузке", JOptionPane.ERROR_MESSAGE);
                      }
                  }
          });
@@ -126,37 +141,63 @@ import java.io.*;
 
         JButton buttonTake = new JButton("Забрать");
         buttonTake.addActionListener(e -> {
-            int planePosition = Integer.parseInt(textField.getText());
-            ITransport pl;
-            if ((pl = hangar.get(list.getSelectedIndex()).del(planePosition)) != null) {
-                    pl.SetPosition(0, 20, panelPlane.getWidth(), panelPlane.getHeight());
-                    panelPlane.setTransport(pl);
-                } else {
-                    panelPlane.setTransport(null);
+            if (list.getSelectedIndex() > -1) {
+                if (!textField.getText().equals("")) {
+                    try {
+                        ITransport pl = hangar.get(list.getSelectedIndex()).del(Integer.parseInt(textField.getText()));
+                        if (pl != null) {
+                            pl.SetPosition(5, 5, panelPlane.getWidth(), panelPlane.getHeight());
+                            panelPlane.setTransport(pl);
+                            panelPlane.repaint();
+                        } else {
+                            panelPlane.setTransport(null);
+                            panelPlane.repaint();
+                        }
+                        logger.info("Украден самолет  " + pl.toString() + " с места " +
+                                textField.getText());
+                        panelHangar.repaint();
+                    } catch (HangarNotFoundException ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Не найдено", JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+
+                    }
                 }
-            panelPlane.repaint();
-            panelHangar.repaint();
+            }
         });
         buttonTake.setBounds(10, 83, 112, 23);
          panelTakePlane.add(buttonTake);
 
-        JButton buttonParkSportPlane = new JButton();
-        buttonParkSportPlane.addActionListener(e -> {
-            getPlane();
-            panelHangar.repaint();
+        JButton buttonPark = new JButton();
+        buttonPark.addActionListener(e -> {
+            select = new GUI_Hangar_Config(frame);
+            if (select.res()) {
+                ITransport pl = select.pl;
+                if (pl != null) {
+                    try {
+                        int place = hangar.get(list.getSelectedIndex()).add(pl);
+                        logger.info("Добавлен самолет " + pl.toString() + " на место " + place);
+                        panelHangar.repaint();
+                    } catch (HangarOverflowException ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
         });
-        buttonParkSportPlane.setLayout(null);
+        buttonPark.setLayout(null);
         JLabel label3 = new JLabel("Припарковать");
         label3.setBounds(5, 5, 100, 15);
         JLabel label4 = new JLabel("Какой-нибудь");
         label4.setBounds(5, 23, 100, 15);
         JLabel label5 = new JLabel("Самолет");
         label5.setBounds(5, 41, 100, 15);
-        buttonParkSportPlane.add(label3);
-        buttonParkSportPlane.add(label4);
-        buttonParkSportPlane.add(label5);
-        buttonParkSportPlane.setBounds(642, 175, 132, 62);
-        frame.getContentPane().add(buttonParkSportPlane);
+        buttonPark.add(label3);
+        buttonPark.add(label4);
+        buttonPark.add(label5);
+        buttonPark.setBounds(642, 175, 132, 62);
+        frame.getContentPane().add(buttonPark);
         frame.setVisible(true);
     }
 }

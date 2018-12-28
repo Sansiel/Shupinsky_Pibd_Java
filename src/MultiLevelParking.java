@@ -22,7 +22,7 @@ public class MultiLevelParking {
             }
             return null;
         }
-    public boolean saveData(String filename) {
+    public void saveData(String filename) throws Exception {
         File file = new File(filename);
         if (file.exists()) {
             file.delete();
@@ -44,17 +44,15 @@ public class MultiLevelParking {
                     }
                 }
             }
-            return true;
         } catch (Exception ex) {
-            System.out.println(ex);
-            return false;
+            throw ex;
         }
     }
 
-    public boolean loadData(String filename) {
+    public void loadData(String filename) throws Exception {
         File file = new File(filename);
         if (!file.exists()) {
-            return false;
+            throw new FileNotFoundException();
         }
         String bufferTextFromFile = "";
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -62,43 +60,46 @@ public class MultiLevelParking {
             while ((line = br.readLine()) != null) {
                 bufferTextFromFile += line + "\n";
             }
-            String[] strs = bufferTextFromFile.split("\n");
-            if (strs[0].contains("CountLeveles")) {
-                //считываем количество уровней
-                int count = Integer.parseInt(strs[0].split(":")[1]);
-                if (hangarStages != null) {
-                    hangarStages.clear();
-                }
-                hangarStages = new ArrayList<Hangar<ITransport>>(count);
-            } else {
-                //если нет такой записи, то это не те данные
-                return false;
-            }
-            int counter = -1;
-            ITransport pl = null;
-            for (int i = 1; i < strs.length - 1; ++i) {
-                //идем по считанным записям
-                if (strs[i].equals("Level")) {
-                    //начинаем новый уровень
-                    counter++;
-                    hangarStages.add(new Hangar<ITransport>(countPlaces, pictureWidth, pictureHeight));
-                    continue;
-                }
-                if (strs[i].isEmpty() || strs[i] == null) {
-                    continue;
-                }
-                if (strs[i].split(":")[1].equals("plane")) {
-                    pl = new plane(strs[i].split(":")[2]);
-                } else if (strs[i].split(":")[1].equals("SportPlane")) {
-                    pl = new SportPlane(strs[i].split(":")[2]);
-                }
-                hangarStages.get(counter).setTrasport(Integer.parseInt(strs[i].split(":")[0]), pl);
-            }
-            return true;
+
         } catch (Exception e) {
-            System.out.println(e);
+            throw e;
         }
-        return false;
+
+        String[] strs = bufferTextFromFile.split("\n");
+        if (strs[0].contains("CountLeveles")) {
+            //считываем количество уровней
+            int count = Integer.parseInt(strs[0].split(":")[1]);
+            if (hangarStages != null) {
+                hangarStages.clear();
+
+            }
+            hangarStages = new ArrayList<Hangar<ITransport>>(count);
+        } else {
+            //если нет такой записи, то это не те данные
+            throw new Exception("Неверный формат файла");
+        }
+
+        int counter = -1;
+        ITransport pl = null;
+        for (int i = 1; i < strs.length - 1; ++i) {
+            //идем по считанным записям
+            if (strs[i].equals("Level")) {
+                //начинаем новый уровень
+                counter++;
+                hangarStages.add(new Hangar<ITransport>(countPlaces, pictureWidth, pictureHeight));
+                continue;
+            }
+            if (strs[i].isEmpty() || strs[i] == null) {
+                continue;
+            }
+            if (strs[i].split(":")[1].equals("plane")) {
+                pl = new plane(strs[i].split(":")[2]);
+            } else if (strs[i].split(":")[1].equals("SportPlane")) {
+                pl = new SportPlane(strs[i].split(":")[2]);
+            }
+            hangarStages.get(counter).setTrasport(Integer.parseInt(strs[i].split(":")[0]), pl);
+        }
+
     }
 
     private void writeToFile(String text, BufferedWriter writer) {
