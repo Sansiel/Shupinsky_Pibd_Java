@@ -2,26 +2,27 @@ import java.util.*;
 import java.io.*;
 import java.awt.*;
 public class MultiLevelParking {
-        ArrayList<Hangar<ITransport>> hangarStages;
-        private final int countPlaces = 15;
-        private int pictureWidth;
-        private int pictureHeight;
-        public MultiLevelParking(int countStages, int pictureWidth, int pictureHeight)
-        {   this.pictureWidth = pictureWidth;
-            this.pictureHeight = pictureHeight;
-            hangarStages = new ArrayList<Hangar<ITransport>>();
-            for (int i = 0; i < countStages; ++i)
-            {
-                hangarStages.add(new Hangar<ITransport>(countPlaces, pictureWidth, pictureHeight));
-            }
+    ArrayList<Hangar<ITransport>> hangarStages;
+    private final int countPlaces = 15;
+    private int pictureWidth;
+    private int pictureHeight;
+
+    public MultiLevelParking(int countStages, int pictureWidth, int pictureHeight) {
+        this.pictureWidth = pictureWidth;
+        this.pictureHeight = pictureHeight;
+        hangarStages = new ArrayList<Hangar<ITransport>>();
+        for (int i = 0; i < countStages; ++i) {
+            hangarStages.add(new Hangar<ITransport>(countPlaces, pictureWidth, pictureHeight));
         }
-        public Hangar<ITransport> get(int index)
-        {
-            if (index > -1 && index < hangarStages.size()) {
-                return hangarStages.get(index);
-            }
-            return null;
+    }
+
+    public Hangar<ITransport> get(int index) {
+        if (index > -1 && index < hangarStages.size()) {
+            return hangarStages.get(index);
         }
+        return null;
+    }
+
     public void saveData(String filename) throws Exception {
         File file = new File(filename);
         if (file.exists()) {
@@ -110,4 +111,8 @@ public class MultiLevelParking {
             System.out.println(e);
         }
     }
+
+    public void Sort() {
+        hangarStages.sort(null);
     }
+}

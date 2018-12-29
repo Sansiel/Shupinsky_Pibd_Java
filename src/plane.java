@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.io.*;
 
-public class plane extends MainLabaClass{
+public class plane extends MainLabaClass implements Serializable, Comparable<plane> {
     public plane(int maxSpeed, int weight, Color mainColor)
     {
         MaxSpeed = maxSpeed;
@@ -115,5 +116,38 @@ public class plane extends MainLabaClass{
                 MainColor = Color.WHITE;
                 break;
         }
+    }
+
+    @Override
+    public int compareTo(plane another) {
+        if (another == null) {
+            return 1;
+        }
+        if (MaxSpeed != another.MaxSpeed) {
+            return Integer.compare(MaxSpeed,another.MaxSpeed);
+        }
+        if (Weight != another.Weight) {
+            return Float.compare(Weight,another.Weight);
+        }
+        if (MainColor != another.MainColor) {
+            return Integer.compare(MainColor.getRGB(),another.MainColor.getRGB());
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        if (another == null) return false;
+        if (!(another instanceof plane)) return false;
+        plane planeObj = (plane) another;
+        return equals(planeObj);
+    }
+
+    public boolean equals(plane another) {
+        if (another == null) return false;
+        if (MaxSpeed != another.MaxSpeed) return false;
+        if (Weight != another.Weight) return false;
+        if (MainColor != another.MainColor) return false;
+        return true;
     }
 }

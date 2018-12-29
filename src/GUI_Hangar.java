@@ -180,6 +180,8 @@ import java.util.logging.SimpleFormatter;
                         panelHangar.repaint();
                     } catch (HangarOverflowException ex) {
                         JOptionPane.showMessageDialog(frame, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
+                    }catch(HangarAlreadyHaveException ex){
+                        JOptionPane.showMessageDialog(null,"В ангаре такой самолет уже есть!");
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(frame, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
                     }
@@ -187,6 +189,15 @@ import java.util.logging.SimpleFormatter;
             }
         });
         buttonPark.setLayout(null);
+
+        JButton buttonSort = new JButton("Sort");
+        buttonSort.addActionListener(e -> {
+            hangar.Sort();
+            panelHangar.repaint();
+        });
+        buttonSort.setBounds(10, 83, 112, 23);
+        panelTakePlane.add(buttonSort);
+
         JLabel label3 = new JLabel("Припарковать");
         label3.setBounds(5, 5, 100, 15);
         JLabel label4 = new JLabel("Какой-нибудь");

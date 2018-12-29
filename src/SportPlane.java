@@ -1,7 +1,7 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.io.*;
 
-    public class SportPlane extends plane {
+    public class SportPlane extends plane  implements Serializable {
 
         private Color DopColor;
 
@@ -87,5 +87,33 @@ import java.awt.Graphics;
             }
             else str = "white";
             return (super.toString() + ";" + str);
+        }
+
+        public int compareTo(SportPlane another) {
+            if (another == null) return 1;
+            if (MaxSpeed != another.MaxSpeed) return Integer.compare(MaxSpeed,another.MaxSpeed);
+            if (Weight != another.Weight) return Float.compare(Weight,another.Weight);
+            if (MainColor != another.MainColor) return Integer.compare(MainColor.getRGB(),another.MainColor.getRGB());
+            if (DopColor != another.DopColor) return Integer.compare(DopColor.getRGB(),another.DopColor.getRGB());
+            return 0;
+        }
+        public boolean equals(Object another) {
+            if (another == null) {
+                return false;
+            }
+            if (!(another instanceof SportPlane)) {
+                return false;
+            }
+            SportPlane planeObject = (SportPlane) another;
+            return equals(planeObject);
+        }
+
+        public boolean equals(SportPlane another) {
+            if (another == null) return false;
+            if (MaxSpeed != another.MaxSpeed) return false;
+            if (Weight != another.Weight) return false;
+            if (MainColor != another.MainColor) return false;
+            if (DopColor != another.DopColor) return false;
+            return true;
         }
     }
